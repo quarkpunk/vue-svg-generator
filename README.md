@@ -9,11 +9,17 @@ This script automatically generates Vue components for SVG icons using the origi
 4. Run ```node index.js```
 5. Copy the finished components into your Vue project folder
 
+###
+
+If you want to use a prefix for the Vue component name, then use the following argument below. The prefix adds the name before your file, for example 'icon-' + svg file name, as specified in the example
+```sh
+node index.js --prefix 'icon-'
+```
 ## Example
 
 ```js
 <template>
-    <IconName :width="32" :height="32" fill="white" />
+    <IconName :width="32" :height="32" color="white" />
 </template>
 
 <script>
@@ -29,8 +35,8 @@ export default {
 
 ## Components props
 ```js
+color:    { type: String }
 fill:     { type: String }
-stroke:   { type: String }
 width:    { type: Number }
 height:   { type: Number }
 viewBox:  { type: String }
