@@ -24,26 +24,32 @@ fs.readdir(iconsDir, (err, files) => {
             const componentPath = path.join(componentsDir, `${componentName}.vue`);
             const svgContent = fs.readFileSync(iconPath, 'utf8');
 
-            // Uploading the SVG code to cheerio
+
             const $ = cheerio.load(svgContent, { xmlMode: true });
+            let strokeWidth = 1;
 
             $('path').each((i, el) => {
                 if($(el).attr('stroke')) {
-                    $(el).removeAttr('stroke')
+                    $(el).removeAttr('stroke');
                     $(el).attr(':stroke', 'color');
                 }
+                if($(el).attr('stroke-width')) {
+                    strokeWidth = $(el).attr('stroke-width');
+                    $(el).removeAttr('stroke-width');
+                    $(el).attr(':stroke-width', 'stroke');
+                }
                 if($(el).attr('fill')) {
-                    $(el).removeAttr('fill')
+                    $(el).removeAttr('fill');
                     $(el).attr(':fill', 'color');
                 }
             });
             $('rect').each((i, el) => {
                 if($(el).attr('stroke')) {
-                    $(el).removeAttr('stroke')
+                    $(el).removeAttr('stroke');
                     $(el).attr(':stroke', 'color');
                 }
                 if($(el).attr('fill')) {
-                    $(el).removeAttr('fill')
+                    $(el).removeAttr('fill');
                     $(el).attr(':fill', 'color');
                 }
             });
@@ -64,7 +70,7 @@ fs.readdir(iconsDir, (err, files) => {
             // Final template
             const componentTemplate = 
 `<template>
-<svg :width="width" :height="height" :viewBox="viewBox" :fill="fill" xmlns="http://www.w3.org/2000/svg">
+<svg :width="width" :height="height" :viewBox="viewBox" :fill="fill" :stroke="stroke" xmlns="http://www.w3.org/2000/svg">
 ${cleanedSvgContent}
 </svg>
 </template>
@@ -73,6 +79,7 @@ ${cleanedSvgContent}
 export default {
   name: '${componentName}',
   props: {
+    stroke:  { type: Number, default: ${strokeWidth} },
     color:   { type: String, default: '#000' },
     fill:    { type: String, default: '${fill}' },
     width:   { type: Number, default: ${parseInt(width, 10)} },
